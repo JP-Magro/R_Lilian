@@ -1,7 +1,7 @@
-"0","DicLil <- read_csv(""tabela_correspondencia_alimentos_agricultura familiar PNAE - alimento_processamento.csv"")"
+"0","DicLil <- read_csv(""tabela_correspondencia_alimentos_agricultura familiar PNAE - alimento_processamento - 05062022.csv"")"
 "1","[1mRows: [22m[34m594[39m [1mColumns: [22m[34m7[39m
 "
-"1","[36m--[39m [1mColumn specification[22m [36m-----------------------------------------------------------------------[39m
+"1","[36m--[39m [1mColumn specification[22m [36m--------------------------------------------------------------------------------------------------------------------[39m
 [1mDelimiter:[22m "",""
 [31mchr[39m (6): y, item, tipo de processamento, processamento, marca (1=sim; 0=não), variedade
 [32mdbl[39m (1): Número de caracteres
@@ -10,3 +10,4 @@
 [36mi[39m Use [38;5;251m[48;5;235m[38;5;251m[48;5;235m`spec()`[48;5;235m[38;5;251m[49m[39m to retrieve the full column specification for this data.
 [36mi[39m Specify the column types or set [38;5;251m[48;5;235m[38;5;251m[48;5;235m`show_col_types = FALSE`[48;5;235m[38;5;251m[49m[39m to quiet this message.
 "
+"0","CadProdAlim <- read_excel(""POF1718/Cadastro de Produtos do Consumo Alimentar.xls"", col_types = c(""text"", ""text""))"

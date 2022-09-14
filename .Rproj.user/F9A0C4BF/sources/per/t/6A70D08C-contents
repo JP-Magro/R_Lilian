@@ -1,0 +1,92 @@
+---
+title: "Dicionário - Produtos"
+author: "João Pedro Magro"
+date: "Última atualização no dia `r format(Sys.time(), '%d de %B de %Y')` ás `r format(Sys.time(), '%H:%M')`"
+output: 
+   html_document:
+   number_sections: true
+   toc: true
+---
+
+```{r SETUP, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE
+                      ,results = 'show'
+                      ,error=FALSE
+                      ,warning=FALSE
+                      ,message=FALSE)
+```
+
+```{r BIBLIOTECAS, echo=FALSE}
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+library(kableExtra)
+library(readr)
+library(readxl)
+library(fuzzyjoin)
+```
+
+```{r DADOS, echo=FALSE}
+DicLil <- read_csv("tabela_correspondencia_alimentos_agricultura familiar PNAE - alimento_processamento - 05062022.csv")
+CadProdAlim <- read_excel("POF1718/Cadastro de Produtos do Consumo Alimentar.xls", col_types = c("text", "text"))
+```
+
+```{r MUNGING DATA, echo=TRUE}
+
+#Selecting col's from lilian's dic. and excluding brand names
+DicLil <- DicLil|>
+   filter(`marca (1=sim; 0=não)` == "x")|>
+   select("y",item, processamento, variedade)
+
+#Changing header names
+colnames(CadProdAlim) <- c("CodProdPOF","DescProd")
+colnames(DicLil) <- c("RawUsed", "Item", "Proce", "Vari")
+
+#Setting to simple string format
+CadProdAlim <- CadProdAlim|>
+  mutate(DescProd = tolower(DescProd),
+         RawUsedPOF = word(DescProd, 1)) #Spliting indentifyer from IBGE's Dic.
+
+DicLil[DicLil == "x"]<- NA
+
+```
+
+# Raw Run
+
+```{r Food Dic, echo=TRUE}
+#Joining data, by string, max. dist=0
+JoinProdAlimTemp <- DicLil|>
+  stringdist_left_join(CadProdAlim, by = c("RawUsed"="RawUsedPOF"), max_dist = 0)
+
+JoinProdAlim0 <- JoinProdAlimTemp|>
+  filter(!is.na(CodProdPOF))
+
+JoinProdAlimTemp <- JoinProdAlimTemp|>
+  filter(is.na(CodProdPOF))
+
+JoinProdAlimTemp <- JoinProdAlimTemp[,1:4]
+#Joining data, by string, max. dist=1
+
+JoinProdAlimTemp <- JoinProdAlimTemp|>
+  stringdist_left_join(CadProdAlim, by = c("RawUsed"="RawUsedPOF"), max_dist = 1)
+
+JoinProdAlim1 <- JoinProdAlimTemp|>
+  filter(!is.na(CodProdPOF))
+
+```
+
+# Head dos match
+
+## Distância máxima de caracteres = 0
+```{r Dist0, echo=TRUE}
+
+kbl(head(JoinProdAlim0),table.attr = "style = \"color: black;\"", position = "c") |>
+  kable_styling(font_size = 16, position = "c", full_width = FALSE)
+```
+
+## Distância máxima de caracteres = 1
+```{r Dist1, echo=TRUE}
+
+kbl(head(JoinProdAlim1),table.attr = "style = \"color: black;\"", position = "c") |>
+  kable_styling(font_size = 16, position = "c", full_width = FALSE)
+```
