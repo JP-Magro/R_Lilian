@@ -170,4 +170,21 @@ kbl(head(JoinProdAlim1, n=50L),table.attr = "style = \"color: black;\"", positio
 
 <br>
 <br>
-```
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
